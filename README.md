@@ -2,15 +2,6 @@
 
 Running open-weight LLMs locally with TurboQuant KV cache compression.
 
-## Models
-
-| Model | Format | Size | Speed | Command |
-|---|---|---|---|---|
-| **Qwen 3.5 9B** | MLX 4-bit | 5 GB | 11 tok/s | `python3 turboquant_qwen.py` |
-| **Gemma 4 E4B** | MLX 4-bit | 4.9 GB | 34 tok/s | `mlx_lm.chat --model models/gemma-4-e4b-it-4bit` |
-| **Gemma 4 E2B** | MLX 4-bit | 3.3 GB | 64 tok/s | `mlx_lm.chat --model models/gemma-4-e2b-it-4bit` |
-| **Gemma 3 12B** | GGUF Q4_K_M | 6.8 GB | 13 tok/s | `./llama.cpp/build/bin/llama-cli -m models/google_gemma-3-12b-it-Q4_K_M.gguf -c 2048 -fa on --conversation` |
-
 ## TurboQuant Fused Kernel
 
 Custom 4-bit fused Metal attention kernel implementing Google's [TurboQuant](https://arxiv.org/abs/2504.19874) paper for Apple Silicon.
