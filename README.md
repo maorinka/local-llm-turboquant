@@ -1,14 +1,12 @@
-# Local LLM Playground — Mac Mini M4 (16GB)
+# TurboQuant Fused Kernel for Qwen 3.5 on Apple Silicon
 
-Running open-weight LLMs locally with TurboQuant KV cache compression.
+4-bit fused Metal attention kernel implementing Google's [TurboQuant](https://arxiv.org/abs/2504.19874) KV cache compression for [Qwen 3.5 9B](https://huggingface.co/mlx-community/Qwen3.5-9B-MLX-4bit) on MLX.
 
-## TurboQuant Fused Kernel
+Qwen 3.5 is a hybrid SSM + attention model — we apply TurboQuant only to the 8 attention layers, leaving the 24 SSM layers untouched. This gives 29x KV cache compression with zero speed penalty.
 
-Custom 4-bit fused Metal attention kernel implementing Google's [TurboQuant](https://arxiv.org/abs/2504.19874) paper for Apple Silicon.
+## Origin
 
-### Origin
-
-Our fused kernel is adapted from [sharpner/turboquant-mlx](https://github.com/sharpner/turboquant-mlx)'s `fused_tq_attention_norot` kernel ([`turboquant/kernels.py`, lines 718-865](https://github.com/sharpner/turboquant-mlx/blob/master/turboquant/kernels.py#L718-L865)). That original kernel supports 2-bit quantization with `head_dim=128`. We extended it to 4-bit with `head_dim=256` for modern architectures.
+Our fused kernel is adapted from [sharpner/turboquant-mlx](https://github.com/sharpner/turboquant-mlx)'s `fused_tq_attention_norot` kernel ([`turboquant/kernels.py`, lines 718-865](https://github.com/sharpner/turboquant-mlx/blob/master/turboquant/kernels.py#L718-L865)). That original kernel supports 2-bit quantization with `head_dim=128`. We extended it to 4-bit with `head_dim=256` for Qwen 3.5's architecture.
 
 **What we changed from the original kernel:**
 
@@ -59,9 +57,9 @@ On retrieve (during attention):
   Then: inverse rotation via MLX GEMM
 ```
 
-### Results
+## Results
 
-**Speed (Qwen 3.5 9B, M4 Mac Mini 16GB):**
+**Qwen 3.5 9B (`mlx-community/Qwen3.5-9B-MLX-4bit`), M4 Mac Mini 16GB:**
 
 | Method | tok/s | KV Cache |
 |---|---|---|
@@ -79,7 +77,7 @@ On retrieve (during attention):
 | 8K tokens | 313 MB | 114 MB | 2.7x |
 | 16K tokens | 569 MB | 179 MB | 3.2x |
 
-### Files
+## Files
 
 | File | What it does |
 |---|---|
